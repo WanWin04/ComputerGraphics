@@ -65,6 +65,7 @@ void init() {
     glColor3f(1.0, 0.0, 0.0);
 }
 
+// Display 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     Bresenham(10, 10, 40, 30);
@@ -78,6 +79,7 @@ int main() {
         return -1;
     }
 
+    // Set window 
     GLFWwindow* window = glfwCreateWindow(1000, 1000, "Bresenham Line Drawing (Zoomed)", NULL, NULL);
     if (!window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
