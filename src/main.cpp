@@ -14,49 +14,93 @@ void setpixel(int x, int y) {
     glEnd();
 }
 
+// Digital Differential Analyzer
+// Time complexity: O(max(dx, dy)) 
+// Space complexity: 0(1)  
 void LineDDA(int xa, int ya, int xb, int yb) {
-    int dx = xb - xa, dy = yb - ya;
-    int step;
+    int dx = xb - xa;
+    int dy = yb - ya;
 
-    float x = xa, y = ya;
-    float xIncr, yIncr;
+    int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
 
-    if (abs(dx) > abs(dy))
-        step = abs(dx);
-    else 
-        step = abs(dy);
+    float xIncr = dx / (float)steps;
+    float yIncr = dy / (float)steps;
 
-    xIncr = dx / (float)step;
-    yIncr = dy / (float)step;
-
-    setpixel(round(x), round(y));
-
-    for (int i = 0; i < step; ++i) {
+    float x = xa;
+    float y = ya;
+    for (int i = 0; i <= steps; ++i) {
+        setpixel(round(x), round(y));
         x += xIncr;
         y += yIncr;
-        setpixel(round(x), round(y));
     }
 }
 
 void Bresenham(int xa, int ya, int xb, int yb) {
-    int x0 = xa, y0 = ya;
+    int dx = xb - xa;
+    int dy = yb - ya;
 
-    int dx = xb - xa, dy = yb - ya;
-    int constant1 = 2 * dy, constant2 = constant1 - 2 * dx;
-    int p0 = constant1 - dx;
+    float m = dy / (float)dx;
 
-    setpixel(round(x0), round(y0));
+    if (m < 1) {
+        int parameter = 2*dy - dx;
+        int x = xa;
+        int y = ya;
 
-    for (int i = 0; i < dx; ++i) {
-        x0 += 1;
-
-        if (p0 < 0) {
-            p0 += constant1;
-        } else {
-            y0 += 1;
-            p0 += constant2;
+        if (dx < 0) {
+            x = xb;
+            y = yb;
+            xb = xa;
         }
-        setpixel(round(x0), round(y0));
+        setpixel(x, y);
+        
+        while (x < xb) {
+            if (parameter >= 0) {
+                x += 1;
+                y += 1;
+                parameter = parameter + 2*dy - 2*dx;
+            }
+            else {
+                x += 1;
+                parameter = parameter + 2*dy;
+            }
+            setpixel(x, y);
+        }
+    }
+    else if (m > 1) {
+        int parameter = 2*dx - dy;
+        int x = xa;
+        int y = ya;
+
+        if (dy < 0) {
+            x = xb;
+            y = yb;
+            yb = ya;
+        }
+        setpixel(x, y);
+
+        while (y < yb) {
+            if (parameter >= 0) {
+                x += 1;
+                y += 1;
+                parameter = parameter + 2*dx - 2*dy;
+            }
+            else {
+                y += 1;
+                parameter = parameter + 2*dx;
+            }
+            setpixel(x, y);
+        }
+    }
+    else {
+        int x = xa;
+        int y = ya;
+        setpixel(x, y);
+
+        while (x < xb) {
+            x += 1;
+            y += 1;
+            setpixel(x, y);
+        }
     }
 }
 
@@ -68,7 +112,7 @@ void init() {
 // Display 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
-    Bresenham(10, 10, 40, 30);
+    Bresenham(10, 10, 40, 80);
     // LineDDA(10, 10, 40, 30);
     glfwSwapBuffers(glfwGetCurrentContext());
 }
