@@ -124,7 +124,7 @@ int main() {
     }
 
     // Set window 
-    GLFWwindow* window = glfwCreateWindow(1000, 1000, "Bresenham Line Drawing (Zoomed)", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1000, 1000, "Drawing (Zoomed)", NULL, NULL);
     if (!window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
